@@ -102,11 +102,11 @@ def look_for(name):
             items_unowned = soup.find_all(class_="item unowned")
             items_owned = soup.find_all(class_="item owned")
             for item in items_owned:
-                if name in item.find(class_="name").text.replace("'", "").lower():
+                if name in removesyntax(item.find(class_="name").text):
                     item_set.add(title + ": " + item.find(class_="name").text + "(owned)")
                     status = 1
             for item in items_unowned:
-                if name in item.find(class_="name").text.replace("'", "").lower():
+                if name in removesyntax(item.find(class_="name").text):
                     item_set.add(title + ": " + item.find(class_="name").text + "(unowned)")
                     status = 1
     if status == 1:
@@ -115,7 +115,10 @@ def look_for(name):
     else:
         print("No items found")
 
+def removesyntax(word):
+    return word.replace("'", "").replace("-","").lower().strip()
 n = len(sys.argv)
+print()
 if(n == 1):
     scrape_all()
 elif(n == 2):
@@ -132,4 +135,6 @@ else:
     name = ""
     for i in range(1, n):
         name = name + " " + sys.argv[i]
-    look_for(name.lower())
+    print(name.strip())
+    look_for(removesyntax(name))
+print()
