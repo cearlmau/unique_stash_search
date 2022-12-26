@@ -123,6 +123,9 @@ elif(n == 2):
         scrape(map[sys.argv[1].capitalize()])
     else:
         look_for(sys.argv[1].lower())
+elif((sys.argv[1] + " " + sys.argv[2]).lower() == "body armour" 
+        or (sys.argv[1] + " " + sys.argv[2]).lower() == "body armor"):
+    scrape(map["Body Armour"])
 elif(n > 10):
     print("Format: python guild_stash.py [item type/item name]")
 else:
