@@ -1,4 +1,17 @@
+'''
+Guild Stash Web Scraper
+
+Author: Cearlmau
+
+This simple program runs through a public guild stash and displays the unowned uniques.
+Assuming cloudflare nor GGG changes their current setup as of 12/25/2022, this scraper should
+be able to collect information about any public guild stash tab and display it in GUI window.
+'''
+
 from guild_stash import BeautifulSoup, scraper, base, sections, re, map, removesyntax
+
+import tkinter as tk
+from tkinter import ttk
 
 # Gets all sections of unique stash. Returns in following format (string, dict), where string is
 # total completion fraction, and dict is each section, where key is section title and value is
@@ -55,7 +68,9 @@ def get_section(title):
         return {title:(item_owned_set, item_unowned_set)}
     return ()
         
-
+# Gets all uniques matching the input name
+# return a list of matching uniques in the format of
+# (item name, item type title, owned/unowned)
 def search(name):
     item_set = []
     for i in range(sections):
@@ -76,9 +91,107 @@ def search(name):
             for item in items_unowned:
                 if name in removesyntax(item.find(class_="name").text):
                     item_set.append((item.find(class_="name").text, title, "unowned"))
+        
     return item_set
 
 
+# Helper function to format total progress
+# Returns a list of 2 numbers
+def total_progress(number):
+    return [int(i) for i in number.split("/")]
+
+# Handles all gui related display
+def display(t, a):
+    
+    #init details
+    root = tk.Tk()
+    root.geometry('450x450')
+    root.title('Path of Guilding')
+    root.grid()
+
+    root.grid_columnconfigure(0,weight=1)
+    root.grid_columnconfigure(1,weight=1)
+    root.grid_columnconfigure(2,weight=1)
+    root.grid_rowconfigure(0,weight=1)
+    root.grid_rowconfigure(1,weight=1)
+
+    t = total_progress(t)
+
+
+    # label
+    l = tk.Label(root, text = "Total Unique Item Collection Progress")
+    l.config(font =("Courier", 12))
+
+    #progress bar
+    style = ttk.Style(root)
+    style.layout('text.Horizontal.TProgressbar', 
+                [('Horizontal.Progressbar.trough',
+                {'children': [('Horizontal.Progressbar.pbar',
+                                {'side': 'left', 'sticky': 'ns'})],
+                    'sticky': 'nswe'}), 
+                ('Horizontal.Progressbar.label', {'sticky': 'nswe'})])
+    percentage = round((t[0]/t[1]) * 100)
+    style.configure('text.Horizontal.TProgressbar', text= str(percentage) + ' %', anchor='center')
+    variable = tk.DoubleVar(root)
+    pbar = ttk.Progressbar(root, style='text.Horizontal.TProgressbar', variable=variable, length=350)
+    pbar.step(percentage)
+
+    #navigation
+    var = tk.StringVar(root)
+    var.set("All Uniques")
+    def OptionMenu_Select(e):
+        listbox.delete(0, tk.END)
+        a = {}
+        if var.get() == "All Uniques":
+            t, a = get_all()
+        else:
+            a = get_section(var.get())
+        list_insert(listbox, a)
+
+    list = map.keys()
+    dropdown = tk.OptionMenu(root, var,"All Uniques", *list, command=OptionMenu_Select)
+
+    # list
+    listbox = tk.Listbox(root, height = 10,width = 25,bg = "grey",
+            activestyle = 'dotbox',font = "Helvetica",fg = "white",)  
+    list_insert(listbox, a)
+    # searchbar
+    search_frame = tk.Frame(root, )
+    text = tk.Text(search_frame, width=30, height=1)
+    text.insert('1.0','''''')
+    def search_button_select():
+        listbox.delete(0, tk.END)
+        a = search(text.get("1.0",'end-1c'))
+        for i, t, s in a:
+            listbox.insert("1", i + ": " + s)
+    search_button = tk.Button(search_frame, text="search", command=search_button_select)
+
+
+    l.pack()
+    pbar.pack()
+    dropdown.pack()
+    listbox.pack(fill="both", expand=True)
+    search_frame.pack()
+    text.pack(side=tk.LEFT)
+    search_button.pack(side=tk.LEFT)
+
+    root.mainloop()
+
+
+def list_insert(listbox, a):
+    for section in a:
+        for i, unowned in enumerate(a[section]):
+            if i == 1:
+                for item in unowned:
+                    listbox.insert("1", item)
+
+
+
 if __name__ == "__main__":
-    t = search("black")
-    print(t)
+    t, a = get_all()
+
+    display(t, a)
+
+
+
+

@@ -18,7 +18,7 @@ from url import stash_info
 
 scraper = cloudscraper.create_scraper()
 base = "https://www.pathofexile.com/guild/view-stash/" + stash_info #Add relevant stash info here
-map = {"Flask": 1, "Amulet":2, "Ring":3, "Claw":4, "Dagger":5, "Wand":6, "Sword":7, "Axe":8, "Mace":9, "Bow":10, "Staff":11, "Quiver":12, "Belt":13, "Gloves":14, "Boots":15, "Body Armour":16, "Helmet":17, "Shie;d":18, "Map":19, "Jewel":20, "Contract":22}
+map = {"Flask": 1, "Amulet":2, "Ring":3, "Claw":4, "Dagger":5, "Wand":6, "Sword":7, "Axe":8, "Mace":9, "Bow":10, "Staff":11, "Quiver":12, "Belt":13, "Gloves":14, "Boots":15, "Body Armour":16, "Helmet":17, "Shield":18, "Map":19, "Jewel":20, "Contract":22}
 sections = 22
 
 #This function searches through each section of the stash and provides information about each section
