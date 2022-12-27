@@ -86,10 +86,10 @@ def search(name):
             items_unowned = soup.find_all(class_="item unowned")
             items_owned = soup.find_all(class_="item owned")
             for item in items_owned:
-                if name in removesyntax(item.find(class_="name").text):
+                if removesyntax(name) in removesyntax(item.find(class_="name").text):
                     item_set.append((item.find(class_="name").text, title, "owned"))
             for item in items_unowned:
-                if name in removesyntax(item.find(class_="name").text):
+                if removesyntax(name) in removesyntax(item.find(class_="name").text):
                     item_set.append((item.find(class_="name").text, title, "unowned"))
         
     return item_set
@@ -162,6 +162,13 @@ def display(t, a):
     def search_button_select():
         listbox.delete(0, tk.END)
         a = search(text.get("1.0",'end-1c'))
+        text.delete("1.0", "end")
+        for i, t, s in a:
+            listbox.insert("1", i + ": " + s)
+    def search_button_select2(e):
+        listbox.delete(0, tk.END)
+        a = search(text.get("1.0",'end-2c'))
+        text.delete("1.0", "end")
         for i, t, s in a:
             listbox.insert("1", i + ": " + s)
     search_button = tk.Button(search_frame, text="search", command=search_button_select)
@@ -175,6 +182,7 @@ def display(t, a):
     text.pack(side=tk.LEFT)
     search_button.pack(side=tk.LEFT)
 
+    root.bind('<Return>', search_button_select2)
     root.mainloop()
 
 
@@ -189,7 +197,6 @@ def list_insert(listbox, a):
 
 if __name__ == "__main__":
     t, a = get_all()
-
     display(t, a)
 
 

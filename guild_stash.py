@@ -91,11 +91,11 @@ def look_for(name):
             items_unowned = soup.find_all(class_="item unowned")
             items_owned = soup.find_all(class_="item owned")
             for item in items_owned:
-                if name in removesyntax(item.find(class_="name").text):
+                if removesyntax(name) in removesyntax(item.find(class_="name").text):
                     item_set.add(title + ": " + item.find(class_="name").text + "(owned)")
                     status = 1
             for item in items_unowned:
-                if name in removesyntax(item.find(class_="name").text):
+                if removesyntax(name) in removesyntax(item.find(class_="name").text):
                     item_set.add(title + ": " + item.find(class_="name").text + "(unowned)")
                     status = 1
     if status == 1:
@@ -106,7 +106,7 @@ def look_for(name):
 
 #Cleans the word for input
 def removesyntax(word):
-    return word.replace("'", "").replace("-","").lower().strip()
+    return word.replace("'", "").replace("-","").replace(" ", "").lower().strip()
 
 def run():
     n = len(sys.argv)
