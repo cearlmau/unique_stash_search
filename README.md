@@ -6,4 +6,4 @@ The web scraper works off the assumption that you have a defined url which allow
 
 In addition to the two executable python files(`guild_stash.py` and `pathofguilding.py`) you also need to create an additional file (`url.py`) or edit `guild_stash.py` to include the `stash_info` portion of the url needed for the HTTPS request.
 
-`guild_stash.py` is a standalone terminal-based program that (may) require additional user input via line arguments. `pathofguilding.py` requires `guild_stash.py`, and users can change the input and view the output in an external window GUI. Both are functionally identically with minor variations in presentation of data.
+`guild_stash.py` is a standalone terminal-based program that (may) require additional user input via line arguments. `pathofguilding.py` requires `guild_stash.py`, and users can change the input and view the output in an external window GUI. Both are functionally identical with minor variations in presentation of data.
